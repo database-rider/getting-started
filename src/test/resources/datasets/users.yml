@@ -1,0 +1,5 @@
+user: #<1> 
+  - id: 1 #<2> 
+    name: "@realpestano"
+  - id: 2  
+    name: "@dbunit"

@@ -1,0 +1,6 @@
+== Database Rider Sample
+
+image:https://travis-ci.org/database-rider/database-rider-sample.svg[Build Status (Travis CI), link=https://travis-ci.org/database-rider/database-rider-sample]
+
+https://database-rider.github.io/database-rider[Database Rider^] sample application
+

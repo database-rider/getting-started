@@ -1,0 +1,29 @@
+user:
+  - id: 1
+    name: "@dbunit"
+  - id: 2
+    name: "@dbunit2"
+  - id: 3
+    name: "@dbunit3"
+
+tweet:
+  - id: 1
+    content: "tweet from dbunit rules!"
+    date: "[DAY,NOW]"
+    user_id: 1
+  - id: 2
+    content: "test tweet"
+    date: "[DAY,NOW]"
+    user_id: 1
+  - id: 3
+    content: "tweet from dbunit rules2!"
+    date: "[DAY,NOW]"
+    user_id: 2
+  - id: 4
+    content: "test tweet2"
+    date: "[DAY,NOW]"
+    user_id: 2
+  - id: 5
+    content: "tweet from dbunit rules3!"
+    date: "[DAY,NOW]"
+    user_id: 3
