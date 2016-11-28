@@ -54,14 +54,14 @@
 		</dependency>
 		<!-- end::hibernate[] -->
 
-		<!-- tag::database-rider[] -->
+		<!-- tag::rider-core[] -->
 		<dependency>
 			<groupId>com.github.database-rider</groupId>
 			<artifactId>rider-core</artifactId>
 			<version>1.0.0-RC2</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- end::database-rider[] -->
+		<!-- end::rider-core[] -->
 
 		<!-- tag::groovy-all[] -->
 		<dependency>
@@ -74,23 +74,23 @@
 
 		<!-- CDI tests -->
 
-		<!-- tag::dbunit-cdi[] -->
+		<!-- tag::rider-cdi[] -->
 		<dependency>
 			<groupId>com.github.database-rider</groupId>
 			<artifactId>rider-cdi</artifactId>
 			<version>1.0.0-RC2</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- end::dbunit-cdi[] -->
+		<!-- end::rider-cdi[] -->
 
-		<!-- tag::dbunit-cucumber[] -->
+		<!-- tag::rider-cucumber[] -->
 		<dependency>
 			<groupId>com.github.database-rider</groupId>
 			<artifactId>rider-cucumber</artifactId>
 			<version>1.0.0-RC2</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- end::dbunit-cucumber[] -->
+		<!-- end::rider-cucumber[] -->
 
 		<!-- tag::test-control[] -->
 
@@ -183,7 +183,7 @@
 						<version>1.5.3</version>
 						<configuration>
 							<sourceDirectory>src/main/docs</sourceDirectory>
-							<sourceDocumentName>database-rider.adoc</sourceDocumentName>
+							<sourceDocumentName>index.adoc</sourceDocumentName>
 							<outputDirectory>${project.build.directory}/docs</outputDirectory>
 							<headerFooter>true</headerFooter>
 							<doctype>book</doctype>
@@ -251,10 +251,10 @@
 						<version>1.1</version>
 						<configuration>
 							<checkoutDirectory>${project.build.outputDirectory}</checkoutDirectory>
-							<checkinComment>Publishing DBUnit Rules Sample documentation.</checkinComment>
+							<checkinComment>Publishing Database Rider getting started guide.</checkinComment>
 							<content>target/docs</content>
 							<skipDeletedFiles>true</skipDeletedFiles>
-							<pubScmUrl>scm:git:https://${USER}:${PASS}@github.com/database-rider/database-rider-sample.git
+							<pubScmUrl>scm:git:https://${USER}:${PASS}@github.com/database-rider/getting-started.git
 							</pubScmUrl>
 							<scmBranch>gh-pages</scmBranch>
 						</configuration>

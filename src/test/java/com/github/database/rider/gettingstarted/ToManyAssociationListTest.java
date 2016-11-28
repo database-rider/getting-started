@@ -133,7 +133,7 @@ public class ToManyAssociationListTest {
     @Test
     @DataSet("userTweets.yml")
     public void shouldListUsersAndTweetsWithDesltaSpikeCriteria() {
-        //the query below should be in user repository, is here for comparison purposes
+        //the query below should be in user repository, is here for comparison purposes3
         List<User> users = userRepository.criteria().
         //select(User.class,userRepository.attribute(User_.id), userRepository.attribute(User_.name)).
         join(User_.tweets, 

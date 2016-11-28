@@ -1,6 +1,8 @@
-== Database Rider Sample
+== Database Getting Started
 
-image:https://travis-ci.org/database-rider/database-rider-sample.svg[Build Status (Travis CI), link=https://travis-ci.org/database-rider/database-rider-sample]
+image:https://travis-ci.org/database-rider/getting-started.svg[Build Status (Travis CI), link=https://travis-ci.org/database-rider/getting-started]
 
-https://database-rider.github.io/database-rider[Database Rider^] sample application
+Source code of https://database-rider.github.io/database-rider[Database Rider^] getting started guide: The guide can be found on the link below:
+
+https://database-rider.github.io/getting-started.
 

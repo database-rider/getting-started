@@ -1,4 +1,4 @@
-= Ruling Database Testing with Database Rider
+= Database Rider Getting Started
 :page-layout: base
 :source-language: java
 :icons: font
@@ -17,24 +17,25 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-In this article I'm going to talk about https://github.com/rmpestano/dbunit-rules[Database Rider^], a small open source project I maintain which aims to simplify database testingfootnote:[In the context of this article, database testing stands for http://junit.org/[JUnit^] integration tests which depend on a *relational* database so application business logic that depend on a database can be tested without mocking.].
+This guide is a `20~30 minutes read` which will introduce https://github.com/database-rider/database-rider[Database Rider^] and make a tour among its main features.
+
 
 == Introduction
 
-`Database Rider` integrates http://junit.org/[JUnit^] and http://dbunit.sourceforge.net/[DBUnit^] through https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^] and, in case of https://docs.jboss.org/weld/reference/latest/en-US/html_single/[CDI^] based tests, a https://docs.oracle.com/javaee/6/tutorial/doc/gkhjx.html[CDI interceptor^]. This powerful combination lets you easily prepare the database state for testing through *xml, json, xls or yaml* files.
+`Database Rider` integrates http://junit.org/[JUnit^] and http://dbunit.sourceforge.net/[DBUnit^] through https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^] and, in case of https://docs.jboss.org/weld/reference/latest/en-US/html_single/[CDI^] based tests, a https://docs.oracle.com/javaee/6/tutorial/doc/gkhjx.html[CDI interceptor^]. This powerful combination let you easily prepare the database state for testing through *yaml, xml, json, xls or csv* files.
 
 Most inspiration of Database Rider was taken from https://docs.jboss.org/author/display/ARQ/Persistence[Arquillian extension persistence^] a library for database http://stackoverflow.com/questions/15524687/in-container-testing-with-junit[in-container integration tests^].
 
 
-Source code for the upcoming examples can be found at github here: https://github.com/rmpestano/dbunit-rules-sample
+Source code for the upcoming examples can be found at github here: https://github.com/database-rider/getting-started
 
 == Setup Database Rider
 
-First thing to do is to add DBunit Rules core module to your test classpath:
+First thing to do is to add Database Rider core module to your test classpath:
 
 
 ----
-include::{basedir}/pom.xml[tags=dbunit-rules]
+include::{basedir}/pom.xml[tags=rider-core]
 ----
 
 Secondly we need a database, for testing I recommend http://hsqldb.org/[HSQLDB^] which is a very fast in-memory database, here is its maven dependency:
@@ -49,6 +50,8 @@ Later A JPA provider will be needed, in this case Hibernate will be used:
 ----
 include::{basedir}/pom.xml[tags=hibernate]
 ---- 
+
+IMPORTANT: Database Rider don't depend on JPA, it only needs a JDBC connection to ride database through DBUnit.
  
 And the entity manager persistence.xml:
 
@@ -60,7 +63,7 @@ And the entity manager persistence.xml:
     <persistence-unit name="riderDB" transaction-type="RESOURCE_LOCAL">
 
 	    <provider>org.hibernate.ejb.HibernatePersistence</provider>
-	    <class>com.github.dbunit.rules.sample.User</class>
+	    <class>com.github.database.rider.gettingstarted.User</class>
 
 	    <properties>
 		<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />
@@ -76,7 +79,7 @@ And the entity manager persistence.xml:
 
 </persistence>
 ----
-<1> We're creating the database from our JPA entities, but we could use a database migration tool like flyway to do this work, see https://github.com/rmpestano/dbunit-rules/blob/master/examples/jOOQ-DBUnit-flyway-example/src/test/java/JooqDBUnitTest.java#L45[example here^].  
+<1> We're creating the database from our JPA entities, but we could use a database migration tool like flyway to do this work, see https://github.com/database-rider/database-rider/blob/master/rider-examples/jOOQ-rider-flyway-example/src/test/java/JooqDBUnitTest.java#L45[example here^].
 
 and finally the JPA entity which our tests will work on:
 
@@ -92,7 +95,7 @@ public class User {
     private String name;
 ----
 
-Now we are ready to rule our database tests!
+Now we are ready to ride our database tests!
 
 == Example
 
@@ -105,9 +108,11 @@ include::{datasetdir}/users.yml[]
 <1> Table name is followed by `:`, we can have multiple tables in the same file.
 <2> Table rows are separated by `-`.
 
-WARNING: Be careful with *spaces*, wrong identation can lead to invalid dataset (principally in `yaml` datasets).   
+WARNING: Be careful with *spaces*, wrong indentation can lead to invalid dataset (principally in `yaml` datasets).
 
-TIP: For more dataset examples, https://github.com/rmpestano/dbunit-rules/tree/master/core/src/test/resources/datasets[look here^].
+TIP: For more dataset examples, https://github.com/database-rider/database-rider/tree/master/rider-core/src/test/resources/datasets[look here^].
+
+TIP: You can generate datasets based on database tables, look at <<Dataset Exporter>> section.
 
 And the JUnit test:
 
@@ -118,10 +123,10 @@ include::{testdir}/DBUnitRulesCoreTest.java[tags=declaration;sample]
 ----
 <1> EntityManagerProvider is a JUnit rule that initializes a JPA entity manager before each *test class*. `riderDB` is the name of persistence unit;
 <2> DBUnit rule reads *@DataSet* annotations and initializes database before each *test method*. This rule only needs a *JDBC* connection to be created.
-<3> The dataSet configuration itself, https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/api/dataset/DataSet.java#L14[see here^] for all available configuration options. Note that you can provide a comma separated list of datasets names here. 
-<4> *em()* is a shortcut (`import static com.github.dbunit.rules.util.EntityManagerProvider.em;`) for the EntityManager that was initialized by EntityManagerProvider rule. 
+<3> The dataSet configuration itself, https://github.com/database-rider/database-rider/blob/master/core/src/main/java/com/github/database/riderapi/dataset/DataSet.java#L14[see here^] for all available configuration options. Note that you can provide a comma separated list of datasets names here. 
+<4> *em()* is a shortcut (`import static com.github.database.rider.util.EntityManagerProvider.em;`) for the EntityManager that was initialized by EntityManagerProvider rule. 
  
-TIP: There is a lot of https://github.com/rmpestano/dbunit-rules/tree/master/core/src/test/java/com/github/dbunit/rules[example tests here^]. 
+TIP: There is a lot of https://github.com/database-rider/database-rider/tree/master/core/src/test/java/com/github/database/rider[example tests here^]. 
 
 == Transactions 
 
@@ -168,11 +173,9 @@ Actual   :@realpestano
 	at org.dbunit.assertion.JUnitFailureFactory.createFailure(JUnitFailureFactory.java:39)
 	at org.dbunit.assertion.DefaultFailureHandler.createFailure(DefaultFailureHandler.java:97)
 	at org.dbunit.assertion.DefaultFailureHandler.handle(DefaultFailureHandler.java:223)
-	at com.github.dbunit.rules.assertion.DataSetAssert.compareData(DataSetAssert.java:94)
+	at com.github.database.rider.assertion.DataSetAssert.compareData(DataSetAssert.java:94)
 -----
 ====
-
-TIP: Since version _0.9.0_ (To be released at the time of writing) transactions will be able to be managed automatically at test level (useful for _expected datasets_ cause you don't assert db changes inside the test), see https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/TransactionIt.java#L46[example here^].
 
 
 === Regular expressions
@@ -228,7 +231,7 @@ if we do not disable constraints we will receive the error below on dataset crea
 Caused by: org.dbunit.DatabaseUnitException: Exception processing table name='TWEET'
 	at org.dbunit.operation.AbstractBatchOperation.execute(AbstractBatchOperation.java:232)
 	at org.dbunit.operation.CompositeOperation.execute(CompositeOperation.java:79)
-	at com.github.dbunit.rules.dataset.DataSetExecutorImpl.createDataSet(DataSetExecutorImpl.java:127)
+	at com.github.database.rider.dataset.DataSetExecutorImpl.createDataSet(DataSetExecutorImpl.java:127)
 	... 21 more
 Caused by: java.sql.SQLIntegrityConstraintViolationException: integrity constraint violation: foreign key no parent; FK_OH8MF7R69JSK6IISPTIAOCC6L table: TWEET
 	at org.hsqldb.jdbc.JDBCUtil.sqlException(Unknown Source)
@@ -267,6 +270,80 @@ And here is the test:
 include::{testdir}/DBUnitRulesCoreTest.java[tags=scriptable-groovy]
 ----
 
+== Configuration
+
+There are two types of configuration in Database Rider: `DataSet` and `DBUnit`.
+
+DataSet Configuration:: this basically setup the `dataset` which will be used. The only way to configure a dataset is using *@DataSet* annotation.
++
+It can be used at *class* or *method* level:
++
+[source,java]
+----
+     @Test
+     @DataSet(value ="users.yml", strategy = SeedStrategy.UPDATE,
+            disableConstraints = true,cleanAfter = true,transactional = true)
+     public void shouldLoadDataSetConfigFromAnnotation(){
+
+      }
+----
++
+Here are possible values:
++
+[cols="3*", options="header"]
+|===
+|Name | Description | Default
+|value| Dataset file name using test resources folder as root directory. Multiple, comma separated, dataset file names can be provided.| ""
+|executorId| Name of dataset executor for the given dataset.| DataSetExecutorImpl.DEFAULT_EXECUTOR_ID
+|strategy| DataSet seed strategy. Possible values are: CLEAN_INSERT, INSERT, REFRESH and UPDATE.| CLEAN_INSERT, meaning that DBUnit will clean and then insert data in tables present on provided dataset.
+|useSequenceFiltering| If true dbunit will look at constraints and dataset to try to determine the correct ordering for the SQL statements.| true
+|tableOrdering| A list of table names used to reorder DELETE operations to prevent failures due to circular dependencies.| ""
+|disableConstraints| Disable database constraints.| false
+|cleanBefore| If true Database Rider will try to delete database before test in a smart way by using table ordering and brute force.| false
+|cleanAfter| If true Database Rider will try to delete database after test in a smart way by using table ordering and brute force.| false
+|transactional| If true a transaction will be started before test and committed after test execution. | false
+|executeStatementsBefore| A list of jdbc statements to execute before test.| {}
+|executeStatementsAfter| A list of jdbc statements to execute after test.| {}
+|executeScriptsBefore| A list of sql script files to execute before test. Note that commands inside sql file must be separated by `;`.| {}
+|executeScriptsAfter| A list of sql script files to execute after test. Note that commands inside sql file must be separated by `;`.| {}
+|===
+
+DBUnit Configuration:: this basically setup `DBUnit` itself. It can be configured by *@DBUnit* annotation (class or method level) and *dbunit.yml* file present in test resources folder.
++
+[source,java]
+----
+    @Test
+    @DBUnit(cacheConnection = true, cacheTableNames = false, allowEmptyFields = true,batchSize = 50)
+    public void shouldLoadDBUnitConfigViaAnnotation() {
+
+    }
+----
++
+Here is a dbunit.yml example, also the default values:
++
+.src/test/resources/dbunit.yml
+----
+cacheConnection: true
+cacheTableNames: true
+leakHunter: false
+properties:
+  batchedStatements:  false
+  qualifiedTableNames: false
+  caseSensitiveTableNames: false
+  batchSize: 100
+  fetchSize: 100
+  allowEmptyFields: false
+  escapePattern:
+connectionConfig:
+  driver: ""
+  url: ""
+  user: ""
+  password: ""
+----
++
+NOTE: `@DBUnit` annotation takes precedence over `dbunit.yml` global configuration which will be used only if the annotation is not present.
+
+
 == Multiple databases
 
 Multiple databases can be tested by using multiple DBUnit rule and Entity manager providers:
@@ -277,11 +354,56 @@ include::{testdir}/MultipleDataBasesTest.java[]
 ----
 <1> `rule1` is the id of DataSetExecutor, the component responsible for database initialization in Database Rider.
 <2> here we match dataset executor id in @DataSet annotation so in this test we are going to use database from `pu1`.
-<3> For multiple databases in same test we need to initialize database state `programmatically`.
+<3> For multiple databases in same test we need to initialize database state `programmatically` instead of using annotations.
 
-== Ruling database in CDI tests
+== Riding database in *JUnit 5* tests
 
-For CDI based tests we are going to use https://deltaspike.apache.org/documentation/test-control.html[DeltaSpike test control module^] and https://github.com/rmpestano/dbunit-rules/tree/master/cdi[DBUnit rules CDI^].
+http://junit.org/junit5/[JUnit 5^] is the new version of JUnit and comes with a new extension model, so instead of `rules` you will use `extensions` in your tests. Database Rider comes with a JUnit 5 extension which enables DBUnit.
+
+=== Configuration
+
+Just add following dependency to your classpath:
+
+.pom.xml
+----
+<dependency>
+   <groupId>com.github.database-rider</groupId>
+   <artifactId>rider-junit5</artifactId>
+   <version>1.0.0-RC2</version>
+   <scope>test</scope>
+</dependency>
+----
+
+
+=== Example
+
+[source,java,linenums]
+----
+@ExtendWith(DBUnitExtension.class) <1>
+@RunWith(JUnitPlatform.class) <2>
+public class DBUnitJUnit5Test {
+
+    private ConnectionHolder connectionHolder = () -> <3>
+            instance("junit5-pu").connection(); <4>
+
+    @Test
+    @DataSet("users.yml")
+    public void shouldListUsers() {
+        List<User> users = em().createQuery("select u from User u").getResultList();
+        assertThat(users).isNotNull().isNotEmpty().hasSize(2);
+    }
+----
+<1> Enables DBUnit;
+<2> JUnit 5 runner;
+<3> As JUnit5 requires *Java8* you can use lambdas in your tests;
+<4> DBUnitExtension will get connection by reflection so just declare a field or a method with ConnectionHolder as return type.
+
+TIP: Source code of the above example can be https://github.com/database-rider/database-rider/blob/master/junit5/src/test/java/com/github/database/riderjunit5/DBUnitJUnit5It.java/#L22[found here^].
+
+
+== Riding database in CDI tests
+
+For CDI based tests we are going to use https://deltaspike.apache.org/documentation/test-control.html[DeltaSpike test control module^] and https://github.com/database-rider/database-rider/tree/master/rider-cdi[Database Rider CDI^].
 
 The first enables CDI in JUnit tests and the second enables DBUnit though a CDI interceptor.
 
@@ -290,7 +412,7 @@ The first enables CDI in JUnit tests and the second enables DBUnit though a CDI 
 First we need DBUnit CDI:
 .pom.xml
 ----
-include::{basedir}/pom.xml[tags=dbunit-cdi]
+include::{basedir}/pom.xml[tags=rider-cdi]
 ----
 
 And also DeltaSpike control module:
@@ -346,7 +468,7 @@ include::{testdir}/cdi/DBUnitRulesCDITest.java[tags=sample]
 
 All other features presented earlier, *except multiple databases*, are supported by DBUnit CDI.
 
-TIP: For more examples, look at https://github.com/rmpestano/dbunit-rules/tree/master/cdi/src/test/java/com/github/dbunit/rules[CDI module tests here^].
+TIP: For more examples, look at https://github.com/database-rider/database-rider/tree/master/rider-cdi/src/test/java/com/github/database/rider/cdi[CDI module tests here^].
 
 Here is `ExpectedDataSet` example:
 
@@ -362,12 +484,11 @@ And the test:
 include::{testdir}/cdi/DBUnitRulesCDITest.java[tags=expectedCDI]
 ----
 
-TIP: Since version _0.9.0_ (To be released at the time of writing) transactions will be able to be managed automatically at test level (useful for _expected datasets_ cause you don't assert db changes inside the test), see https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/TransactionCDIIt.java#L41[example here^].
+2
 
+== Riding database in BDD tests
 
-== Ruling database in BDD tests
-
-BDD and DBUnit are integrated by https://github.com/rmpestano/dbunit-rules#cucumber-module[Database Rider Cucumber^]. It's a https://cucumber.io/[Cucumber^] runner which is CDI aware.
+BDD and DBUnit are integrated by https://github.com/database-rider/database-rider#cucumber-module[Database Rider Cucumber^]. It's a https://cucumber.io/[Cucumber^] runner which is CDI aware.
 
 
 === Configuration
@@ -376,7 +497,7 @@ Just add following dependency to your classpath:
 
 .pom.xml
 ----
-include::{basedir}/pom.xml[tags=dbunit-cucumber]
+include::{basedir}/pom.xml[tags=rider-cucumber]
 ----
 
 Now you just need to use *CdiCucumberTestRunner* to have `Cucumber`, `CDI` and `DBUnit` on your BDD tests.
@@ -411,56 +532,17 @@ And finally our cucumber step definitions:
 include::{testdir}/bdd/SearchUsersSteps.java[]
 ----
 
-NOTE: Living documentation of _Database Rider_ is based on its https://github.com/rmpestano/dbunit-rules/tree/master/cdi/src/test/java/com/github/dbunit/rules/bdd[BDD tests^], you can access it here: http://rmpestano.github.io/dbunit-rules/documentation.html.
+NOTE: Living documentation of _Database Rider_ is based on its https://github.com/database-rider/database-rider/tree/master/rider-core/src/test/java/com/github/database/riderbdd[BDD tests^], you can access it here: http://rmpestano.github.io/database-rider/latest/documentation.html.
 
-
-== Ruling database in *JUnit 5* tests
-
-http://junit.org/junit5/[JUnit 5^] is the new version of JUnit and comes with a new extension model, so instead of `rules` you will use `extensions` in your tests. Database Rider comes with a JUnit 5 extension which enables DBUnit.
-
-=== Configuration
-
-Just add following dependency to your classpath:
-
-.pom.xml
-----
-<dependency>
-   <groupId>com.github.dbunit-rules</groupId>
-   <artifactId>junit5</artifactId>
-   <version>0.12.0</version>
-   <scope>test</scope>
-</dependency>
-----
-
- 
-=== Example
-
-[source,java,linenums]
-----
-@ExtendWith(DBUnitExtension.class) <1>
-@RunWith(JUnitPlatform.class) <2>
-public class DBUnitJUnit5Test {
-
-    private ConnectionHolder connectionHolder = () -> <3>
-            instance("junit5-pu").connection(); <4>
-
-    @Test
-    @DataSet("users.yml")
-    public void shouldListUsers() {
-        List<User> users = em().createQuery("select u from User u").getResultList();
-        assertThat(users).isNotNull().isNotEmpty().hasSize(2);
-    }
-----	
-<1> Enables DBUnit;
-<2> JUnit 5 runner;
-<3> As JUnit5 requires *Java8* you can use lambdas in your tests;
-<4> DBUnitExtension will get connection by reflection so just declare a field or a method with ConnectionHolder as return type.
-
-TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/junit5/src/test/java/com/github/dbunit/rules/junit5/DBUnitJUnit5It.java/#L22[found here^].
 
 == Exporting DataSets
 
-Creating dataset files is a very `error prone` task when done manually. Using DataSetExporter component you can generate datasets in *YML*, *JSON*, *XML*, *CSV* and *XLS* formats:
+Creating dataset files is a very `error prone` task when done manually. Using DataSetExporter component you can generate *datasets from database* in `YML`, `JSON`, `XML`, `CSV` and `XLS` formats.
+
+There are two ways to generate datasets with database rider, `programmatically` or from your IDE using a `JBoss Forge addon`:
+
+
+=== Generating datasets programmatically
 
 [source, java,linenums]
 ----
@@ -474,7 +556,7 @@ Creating dataset files is a very `error prone` task when done manually. Using Da
         tx().commit();
     	tx().commit();
     	DataSetExporterImpl.getInstance().
-    	export(new DatabaseConnection(emProvider.connection()), <1>
+    	export(emProvider.connection(), <1>
     	    new DataSetExportConfig().outputFileName("target/user.yml")); <2>
     	File ymlDataSet = new File("target/user.yml");
           assertThat(ymlDataSet).exists();
@@ -487,8 +569,8 @@ Creating dataset files is a very `error prone` task when done manually. Using Da
     }
 
 ----
-<1> DatabaseConnection is from DBUnit api and only needs a JDBC connection;
-<2> the second required parameter is a ExporterCnfig which only requires output file name attribute;
+<1> JDBC connection;
+<2> the second required parameter is a ExporterConfig which only requires output file name attribute;
 
 You can use `@ExportDataSet` to make extraction even easier:
 
@@ -503,11 +585,32 @@ You can use `@ExportDataSet` to make extraction even easier:
 ----
 <1> Not required, its here only to add some data to be exported after test execution.
 
-TIP: Full example above (and other related tests) can be https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/ExportDataSetIt.java#L35[found here^].
+TIP: Full example above (and other related tests) can be https://github.com/database-rider/database-rider/blob/master/rider-core/src/test/java/com/github/database/riderExportDataSetIt.java#L35[found here^].
+
+=== Export Datasets using DBUnit Addon
+
+https://github.com/database-rider/dbunit-addon/[DBUnit Addon^] is a https://forge.jboss.org/[JBoss forge^] addon which lets you export datasets from within your IDE through a nice GUI interface.
+
+==== Installation
+
+Use install addon from git command:
+
+----
+addon-install-from-git --url https://github.com/database-rider/dbunit-addon.git
+----
+
+==== Usage
+
+. Setup database connection
++
+image::setup_cmd.png["Setup command"]
+. Export database tables into *YAML*, *JSON*, *XML*, *XLS* and *CSV* datasets.
++
+image::export_cmd.png["Export command"]
 
 === Configuration
 
-Following table shows all exporter configuration options:
+Following table shows dataset exporter configuration options:
 
 [cols="3*", options="header"]
 |===
