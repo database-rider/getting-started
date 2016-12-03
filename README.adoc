@@ -5,4 +5,3 @@ image:https://travis-ci.org/database-rider/getting-started.svg[Build Status (Tra
 Source code of https://database-rider.github.io/database-rider[Database Rider^] getting started guide: The guide can be found on the link below:
 
 https://database-rider.github.io/getting-started.
-
