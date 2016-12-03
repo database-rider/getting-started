@@ -1795,7 +1795,6 @@ Living documentation of <em>Database Rider</em> is based on its <a href="https:/
 18
 19
 20
-21
 </pre></td>
   <td class="code"><pre>    <span class="annotation">@Test</span>
     <span class="annotation">@DataSet</span>(cleanBefore=<span class="predefined-constant">true</span>)
@@ -1803,8 +1802,7 @@ Living documentation of <em>Database Rider</em> is based on its <a href="https:/
             tx().begin();
             User u1 = <span class="keyword">new</span> User();
             u1.setName(<span class="string"><span class="delimiter">&quot;</span><span class="content">u1</span><span class="delimiter">&quot;</span></span>);
-            em().persist(u1); /just insert a user and <span class="keyword">assert</span> it is present in exported dataset
-        tx().commit();
+            em().persist(u1); <span class="comment">//just insert a user and assert it is present in exported dataset</span>
             tx().commit();
             DataSetExporterImpl.getInstance().
             export(emProvider.connection(), <i class="conum" data-value="1"></i><b>(1)</b>
@@ -2109,7 +2107,7 @@ Full example above (and other related tests) can be <a href="https://github.com/
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-12-03 11:57:19 UTC
+Last updated 2016-12-03 12:00:00 UTC
 </div>
 </div>
 </body>
