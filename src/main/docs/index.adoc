@@ -593,7 +593,7 @@ https://github.com/database-rider/dbunit-addon/[DBUnit Addon^] is a https://forg
 
 ==== Installation
 
-Use install addon from git command:
+You will need Forge https://forge.jboss.org/download[installed in your IDE or operating system^]. After that uUse install addon from git command:
 
 ----
 addon-install-from-git --url https://github.com/database-rider/dbunit-addon.git
