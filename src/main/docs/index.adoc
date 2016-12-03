@@ -552,8 +552,7 @@ There are two ways to generate datasets with database rider, `programmatically` 
     	tx().begin();
     	User u1 = new User();
     	u1.setName("u1");
-    	em().persist(u1); /just insert a user and assert it is present in exported dataset
-        tx().commit();
+    	em().persist(u1); //just insert a user and assert it is present in exported dataset
     	tx().commit();
     	DataSetExporterImpl.getInstance().
     	export(emProvider.connection(), <1>
