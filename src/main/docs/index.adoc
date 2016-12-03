@@ -79,7 +79,7 @@ And the entity manager persistence.xml:
 
 </persistence>
 ----
-<1> We're creating the database from our JPA entities, but we could use a database migration tool like flyway to do this work, see https://github.com/database-rider/database-rider/blob/master/rider-examples/jOOQ-DBUnit-flyway-example/src/test/java/JooqDBUnitTest.java#L45[example here^].
+<1> We're creating the database from our JPA entities, but we could use a database migration tool like flyway to do this work, see https://github.com/database-rider/database-rider/blob/master/rider-examples/jOOQ-DBUnit-flyway-example/src/test/java/JooqDBUnitTest.java#L40[example here^].
 
 and finally the JPA entity which our tests will work on:
 
@@ -112,7 +112,7 @@ WARNING: Be careful with *spaces*, wrong indentation can lead to invalid dataset
 
 TIP: For more dataset examples, https://github.com/database-rider/database-rider/tree/master/rider-core/src/test/resources/datasets[look here^].
 
-TIP: You can generate datasets based on database tables, look at <<Dataset Exporter>> section.
+TIP: You can generate datasets based on database tables, look at <<Exporting DataSets>> section.
 
 And the JUnit test:
 
