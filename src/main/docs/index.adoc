@@ -592,7 +592,7 @@ https://github.com/database-rider/dbunit-addon/[DBUnit Addon^] is a https://forg
 
 ==== Installation
 
-You will need Forge https://forge.jboss.org/download[installed in your IDE or operating system^]. After that uUse install addon from git command:
+You will need Forge https://forge.jboss.org/download[installed in your IDE or operating system^]. After that use install addon from git command:
 
 ----
 addon-install-from-git --url https://github.com/database-rider/dbunit-addon.git
@@ -623,7 +623,7 @@ Following table shows dataset exporter configuration options:
 
 == Detecting connection leaks
 
-Database Rider provides a component that count JDBC connection before and after test execution.
+Database Rider provides a component that counts JDBC connection before and after test execution.
 
 [source, java, linenums]
 ----
