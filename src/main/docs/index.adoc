@@ -118,7 +118,7 @@ And the JUnit test:
 
 [source, java, linenums]
 ----
-include::{testdir}/DBUnitRulesCoreTest.java[tags=declaration;sample]
+include::{testdir}/DatabaseRiderCoreTest.java[tags=declaration;sample]
 }
 ----
 <1> EntityManagerProvider is a JUnit rule that initializes a JPA entity manager before each *test class*. `riderDB` is the name of persistence unit;
@@ -134,7 +134,7 @@ EntityManagerProvider rule provides entity manager transactions so you can inser
 
 [source, java, linenums]
 ----
-include::{testdir}/DBUnitRulesCoreTest.java[tags=transaction]
+include::{testdir}/DatabaseRiderCoreTest.java[tags=transaction]
 ----
 <1> `tx()` is a shortcut for the entity manager transaction provided by EntityManagerProvider.
 
@@ -158,7 +158,7 @@ And the following test:
 
 [source, java, linenums]
 ----
-include::{testdir}/DBUnitRulesCoreTest.java[tags=expected]
+include::{testdir}/DatabaseRiderCoreTest.java[tags=expected]
 ----
 <1> Database state after test will be compared with dataset provided by `@ExpectedDataSet`.
 
@@ -189,7 +189,7 @@ include::{datasetdir}/expectedUsersRegex.yml[]
 
 [source, java, linenums]
 ----
-include::{testdir}/DBUnitRulesCoreTest.java[tags=expected-regex]
+include::{testdir}/DatabaseRiderCoreTest.java[tags=expected-regex]
 ----
 <1> You don't need to initialize a dataset but can use `cleanBefore` to clear database before testing.
 
@@ -220,7 +220,7 @@ and the junit test:
 
 [source,java,linenums]
 ----
-include::{testdir}/DBUnitRulesCoreTest.java[tags=scriptable-js]
+include::{testdir}/DatabaseRiderCoreTest.java[tags=scriptable-js]
 ----
 <1> As we don't declared `User` table in dataset it will not be cleared by `CLEAN_INSERT` seeding strategy so we need cleanBefore to avoid conflict with other tests that insert users.
 <2> Disabling constraints is necessary because `Tweet` table depends on `User`.
@@ -267,7 +267,7 @@ And here is the test:
 
 [source,java,linenums]
 ----
-include::{testdir}/DBUnitRulesCoreTest.java[tags=scriptable-groovy]
+include::{testdir}/DatabaseRiderCoreTest.java[tags=scriptable-groovy]
 ----
 
 == Configuration
@@ -522,7 +522,7 @@ Now a Cucumber runner test entry point:
 
 [source,java,linenums]
 ----
-include::{testdir}/bdd/DBUnitRulesBddTest.java[]
+include::{testdir}/bdd/DatabaseRiderBddTest.java[]
 ----
 
 And finally our cucumber step definitions:

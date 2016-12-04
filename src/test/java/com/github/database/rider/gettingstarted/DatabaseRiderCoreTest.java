@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 //tag::declaration[]
 @RunWith(JUnit4.class)
-public class DBUnitRulesCoreTest {
+public class DatabaseRiderCoreTest {
 
     @Rule
     public EntityManagerProvider emProvider = EntityManagerProvider.instance("riderDB");  //<1>
