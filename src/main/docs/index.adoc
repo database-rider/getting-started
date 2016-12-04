@@ -398,7 +398,7 @@ public class DBUnitJUnit5Test {
 <3> As JUnit5 requires *Java8* you can use lambdas in your tests;
 <4> DBUnitExtension will get connection by reflection so just declare a field or a method with ConnectionHolder as return type.
 
-TIP: Source code of the above example can be https://github.com/database-rider/database-rider/blob/master/junit5/src/test/java/com/github/database/riderjunit5/DBUnitJUnit5It.java/#L22[found here^].
+TIP: Source code of the above example can be https://github.com/database-rider/database-rider/blob/master/rider-junit5/src/test/java/com/github/database/rider/junit5/DBUnitJUnit5It.java/#L24[found here^].
 
 
 == Riding database in CDI tests
@@ -481,7 +481,7 @@ And the test:
 
 [source,java,linenums]
 ----
-include::{testdir}/cdi/DBUnitRulesCDITest.java[tags=expectedCDI]
+include::{testdir}/cdi/DatabaseRiderCDITest.java[tags=expectedCDI]
 ----
 
 2

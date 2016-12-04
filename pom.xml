@@ -188,8 +188,8 @@
 							<headerFooter>true</headerFooter>
 							<doctype>book</doctype>
 							<attributes>
-								<sourcedir>${project.build.sourceDirectory}/com/github/database/rider/sample</sourcedir>
-								<testdir>${project.build.testSourceDirectory}/com/github/database/rider/sample</testdir>
+								<sourcedir>${project.build.sourceDirectory}/com/github/database/rider/gettingstarted</sourcedir>
+								<testdir>${project.build.testSourceDirectory}/com/github/database/rider/gettingstarted</testdir>
 								<datasetdir>${project.build.testSourceDirectory}/../resources/datasets</datasetdir>
 								<featuresdir>${project.build.testSourceDirectory}/../resources/features</featuresdir>
 								<metainf>${project.build.testSourceDirectory}/../resources/META-INF</metainf>
