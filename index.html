@@ -805,7 +805,7 @@ You can generate datasets based on database tables, look at <a href="#exporting_
 22
 </pre></td>
   <td class="code"><pre><span class="annotation">@RunWith</span>(JUnit4.class)
-<span class="directive">public</span> <span class="type">class</span> <span class="class">DBUnitRulesCoreTest</span> {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DatabaseRiderCoreTest</span> {
 
     <span class="annotation">@Rule</span>
     <span class="directive">public</span> EntityManagerProvider emProvider = EntityManagerProvider.instance(<span class="string"><span class="delimiter">&quot;</span><span class="content">riderDB</span><span class="delimiter">&quot;</span></span>);  <i class="conum" data-value="1"></i><b>(1)</b>
@@ -2198,7 +2198,7 @@ Examples:
  */</span>
 <span class="annotation">@RunWith</span>(CdiCucumberTestRunner.class)
 <span class="annotation">@CucumberOptions</span>(features =<span class="string"><span class="delimiter">&quot;</span><span class="content">src/test/resources/features/search-users.feature</span><span class="delimiter">&quot;</span></span>)
-<span class="directive">public</span> <span class="type">class</span> <span class="class">DBUnitRulesBddTest</span> {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DatabaseRiderBddTest</span> {
 }</pre></td>
 </tr></table></code></pre>
 </div>
@@ -2680,7 +2680,7 @@ Full example above (and other related tests) can be <a href="https://github.com/
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-12-04 12:26:04 UTC
+Last updated 2016-12-04 12:28:31 UTC
 </div>
 </div>
 </body>
