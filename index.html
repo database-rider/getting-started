@@ -783,8 +783,48 @@ You can generate datasets based on database tables, look at <a href="#exporting_
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/DBUnitRulesCoreTest.java[tags=declaration;sample]
+  <td class="code"><pre><span class="annotation">@RunWith</span>(JUnit4.class)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DBUnitRulesCoreTest</span> {
+
+    <span class="annotation">@Rule</span>
+    <span class="directive">public</span> EntityManagerProvider emProvider = EntityManagerProvider.instance(<span class="string"><span class="delimiter">&quot;</span><span class="content">riderDB</span><span class="delimiter">&quot;</span></span>);  <i class="conum" data-value="1"></i><b>(1)</b>
+
+    <span class="annotation">@Rule</span>
+    <span class="directive">public</span> DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.connection()); <i class="conum" data-value="2"></i><b>(2)</b>
+
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">users.yml</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="directive">public</span> <span class="type">void</span> shouldListUsers() {
+        <span class="predefined-type">List</span>&lt;User&gt; users = em(). <i class="conum" data-value="4"></i><b>(4)</b>
+                createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select u from User u</span><span class="delimiter">&quot;</span></span>).
+                getResultList();
+        assertThat(users).
+                isNotNull().
+                isNotEmpty().
+                hasSize(<span class="integer">2</span>);
+    }
 }</pre></td>
 </tr></table></code></pre>
 </div>
@@ -833,8 +873,70 @@ There is a lot of <a href="https://github.com/database-rider/database-rider/tree
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/DBUnitRulesCoreTest.java[tags=transaction]</pre></td>
+  <td class="code"><pre>    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(value=<span class="string"><span class="delimiter">&quot;</span><span class="content">users.yml</span><span class="delimiter">&quot;</span></span>, disableConstraints=<span class="predefined-constant">true</span>)
+    <span class="directive">public</span> <span class="type">void</span> shouldUpdateUser() {
+        User user = (User) em().
+                createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select u from User u  where u.id = 1</span><span class="delimiter">&quot;</span></span>).
+                getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getName()).isEqualTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">@realpestano</span><span class="delimiter">&quot;</span></span>);
+        tx().begin(); <i class="conum" data-value="1"></i><b>(1)</b>
+        user.setName(<span class="string"><span class="delimiter">&quot;</span><span class="content">@rmpestano</span><span class="delimiter">&quot;</span></span>);
+        em().merge(user);
+        tx().commit();
+        assertThat(user.getName()).isEqualTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">@rmpestano</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">users.yml</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">void</span> shouldDeleteUser() {
+        User user = (User) em().
+                createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select u from User u  where u.id = 1</span><span class="delimiter">&quot;</span></span>).
+                getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getName()).isEqualTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">@realpestano</span><span class="delimiter">&quot;</span></span>);
+        tx().begin();
+        em().remove(user);
+        tx().commit();
+        <span class="predefined-type">List</span>&lt;User&gt; users = em().
+                createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select u from User u </span><span class="delimiter">&quot;</span></span>).
+                getResultList();
+        assertThat(users).
+                hasSize(<span class="integer">1</span>);
+    }</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -882,8 +984,30 @@ There is a lot of <a href="https://github.com/database-rider/database-rider/tree
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/DBUnitRulesCoreTest.java[tags=expected]</pre></td>
+  <td class="code"><pre>    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">users.yml</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@ExpectedDataSet</span>(value = <span class="string"><span class="delimiter">&quot;</span><span class="content">expectedUser.yml</span><span class="delimiter">&quot;</span></span>,ignoreCols = <span class="string"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="directive">public</span> <span class="type">void</span> shouldAssertDatabaseUsingExpectedDataSet() {
+        User user = (User) em().
+                createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select u from User u  where u.id = 1</span><span class="delimiter">&quot;</span></span>).
+                getSingleResult();
+        assertThat(user).isNotNull();
+        tx().begin();
+        em().remove(user);
+        tx().commit();
+    }</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -940,8 +1064,32 @@ Actual   :@realpestano
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/DBUnitRulesCoreTest.java[tags=expected-regex]</pre></td>
+  <td class="code"><pre>    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(cleanBefore = <span class="predefined-constant">true</span>) <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="annotation">@ExpectedDataSet</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">expectedUsersRegex.yml</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">void</span> shouldAssertDatabaseUsingRegex() {
+        User u = <span class="keyword">new</span> User();
+        u.setName(<span class="string"><span class="delimiter">&quot;</span><span class="content">expected user1</span><span class="delimiter">&quot;</span></span>);
+        User u2 = <span class="keyword">new</span> User();
+        u2.setName(<span class="string"><span class="delimiter">&quot;</span><span class="content">expected user2</span><span class="delimiter">&quot;</span></span>);
+        tx().begin();
+        em().persist(u);
+        em().persist(u2);
+        tx().commit();
+    }</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -981,8 +1129,41 @@ When you use a dataset like users.yml in @DataSet dbunit will use <code>CLEAN_IN
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/main/java/com/github/database/rider/sample/Tweet.java[tags=tweet]</pre></td>
+  <td class="code"><pre><span class="annotation">@Entity</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Tweet</span> {
+
+    <span class="annotation">@Id</span>
+    <span class="annotation">@GeneratedValue</span>
+    <span class="directive">private</span> <span class="predefined-type">Long</span> id;
+
+    <span class="annotation">@Size</span>(min = <span class="integer">1</span>, max = <span class="integer">140</span>)
+    <span class="directive">private</span> <span class="predefined-type">String</span> content;
+
+    <span class="directive">private</span> <span class="predefined-type">Integer</span> likes;
+
+    <span class="annotation">@Temporal</span>(TemporalType.DATE)
+    <span class="directive">private</span> <span class="predefined-type">Date</span> date;
+
+    <span class="annotation">@ManyToOne</span>(fetch = FetchType.LAZY)
+    User user;
+</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -1016,8 +1197,24 @@ When you use a dataset like users.yml in @DataSet dbunit will use <code>CLEAN_IN
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/DBUnitRulesCoreTest.java[tags=scriptable-js]</pre></td>
+  <td class="code"><pre>    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(value = <span class="string"><span class="delimiter">&quot;</span><span class="content">dataset-with-javascript.yml</span><span class="delimiter">&quot;</span></span>,
+            cleanBefore = <span class="predefined-constant">true</span>,  <i class="conum" data-value="1"></i><b>(1)</b>
+            disableConstraints = <span class="predefined-constant">true</span>)  <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="directive">public</span> <span class="type">void</span> shouldSeedDatabaseUsingJavaScriptInDataset() {
+        Tweet tweet = (Tweet) em().createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select t from Tweet t where t.id = 1</span><span class="delimiter">&quot;</span></span>).getSingleResult();
+        assertThat(tweet).isNotNull();
+        assertThat(tweet.getLikes()).isEqualTo(<span class="integer">50</span>);
+    }</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -1112,8 +1309,28 @@ If we declare <code>User</code> table in <code>dataset-with-javascript.yml</code
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/DBUnitRulesCoreTest.java[tags=scriptable-groovy]</pre></td>
+  <td class="code"><pre>    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(value = <span class="string"><span class="delimiter">&quot;</span><span class="content">dataset-with-groovy.yml</span><span class="delimiter">&quot;</span></span>,
+            cleanBefore = <span class="predefined-constant">true</span>,
+            disableConstraints = <span class="predefined-constant">true</span>)
+    <span class="directive">public</span> <span class="type">void</span> shouldSeedDatabaseUsingGroovyInDataset() <span class="directive">throws</span> <span class="exception">ParseException</span> {
+        Tweet tweet = (Tweet) em().createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select t from Tweet t where t.id = '1'</span><span class="delimiter">&quot;</span></span>).getSingleResult();
+        assertThat(tweet).isNotNull();
+        <span class="predefined-type">SimpleDateFormat</span> sdf = <span class="keyword">new</span> <span class="predefined-type">SimpleDateFormat</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">yyyy-MM-dd</span><span class="delimiter">&quot;</span></span>);<span class="comment">//remove time</span>
+        <span class="predefined-type">Date</span> now = sdf.parse(sdf.format(<span class="keyword">new</span> <span class="predefined-type">Date</span>()));
+        assertThat(tweet.getDate()).isEqualTo(now);
+    }</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -1292,8 +1509,164 @@ connectionConfig:
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/MultipleDataBasesTest.java<span class="type">[]</span></pre></td>
+  <td class="code"><pre><span class="keyword">package</span> <span class="namespace">com.github.database.rider.gettingstarted</span>;
+
+<span class="keyword">import</span> <span class="include">com.github.database.rider.core.DBUnitRule</span>;
+<span class="keyword">import</span> <span class="include">com.github.database.rider.core.api.dataset.DataSet</span>;
+<span class="keyword">import</span> <span class="include">com.github.database.rider.core.api.dataset.DataSetExecutor</span>;
+<span class="keyword">import</span> <span class="include">com.github.database.rider.core.configuration.DataSetConfig</span>;
+<span class="keyword">import</span> <span class="include">com.github.database.rider.core.connection.ConnectionHolderImpl</span>;
+<span class="keyword">import</span> <span class="include">com.github.database.rider.core.dataset.DataSetExecutorImpl</span>;
+<span class="keyword">import</span> <span class="include">com.github.database.rider.core.util.EntityManagerProvider</span>;
+<span class="keyword">import</span> <span class="include">org.junit.Rule</span>;
+<span class="keyword">import</span> <span class="include">org.junit.Test</span>;
+<span class="keyword">import</span> <span class="include">org.junit.runner.RunWith</span>;
+<span class="keyword">import</span> <span class="include">org.junit.runners.JUnit4</span>;
+
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.assertThat</span>;
+
+<span class="comment">/**
+ * Created by pestano on 23/07/15.
+ */</span>
+
+<span class="annotation">@RunWith</span>(JUnit4.class)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MultipleDataBasesTest</span> {
+
+    <span class="annotation">@Rule</span>
+    <span class="directive">public</span> EntityManagerProvider emProvider = EntityManagerProvider.instance(<span class="string"><span class="delimiter">&quot;</span><span class="content">pu1</span><span class="delimiter">&quot;</span></span>);
+
+    <span class="annotation">@Rule</span>
+    <span class="directive">public</span> EntityManagerProvider emProvider2 = EntityManagerProvider.instance(<span class="string"><span class="delimiter">&quot;</span><span class="content">pu2</span><span class="delimiter">&quot;</span></span>);
+
+    <span class="annotation">@Rule</span>
+    <span class="directive">public</span> DBUnitRule rule1 = DBUnitRule.instance(<span class="string"><span class="delimiter">&quot;</span><span class="content">rule1</span><span class="delimiter">&quot;</span></span>,emProvider.connection()); <i class="conum" data-value="1"></i><b>(1)</b>
+
+    <span class="annotation">@Rule</span>
+    <span class="directive">public</span> DBUnitRule rule2 = DBUnitRule.instance(<span class="string"><span class="delimiter">&quot;</span><span class="content">rule2</span><span class="delimiter">&quot;</span></span>,emProvider2.connection());
+
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(value = <span class="string"><span class="delimiter">&quot;</span><span class="content">users.yml</span><span class="delimiter">&quot;</span></span>, executorId = <span class="string"><span class="delimiter">&quot;</span><span class="content">rule1</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="directive">public</span> <span class="type">void</span> shouldSeedDatabaseUsingPu1() {
+        User user = (User) emProvider.em().
+                createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select u from User u where u.id = 1</span><span class="delimiter">&quot;</span></span>).getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(<span class="integer">1</span>);
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(value = <span class="string"><span class="delimiter">&quot;</span><span class="content">users.yml</span><span class="delimiter">&quot;</span></span>, executorId = <span class="string"><span class="delimiter">&quot;</span><span class="content">rule2</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">void</span> shouldSeedDatabaseUsingPu2() {
+        User user = (User) emProvider2.em().
+                createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select u from User u where u.id = 1</span><span class="delimiter">&quot;</span></span>).getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(<span class="integer">1</span>);
+    }
+
+    <span class="annotation">@Test</span> <i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="directive">public</span> <span class="type">void</span> shouldSeedDatabaseUsingMultiplePus() {
+        DataSetExecutor exec1 = DataSetExecutorImpl.
+                instance(<span class="string"><span class="delimiter">&quot;</span><span class="content">exec1</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> ConnectionHolderImpl(emProvider.connection()));
+        DataSetExecutor exec2 = DataSetExecutorImpl.
+                instance(<span class="string"><span class="delimiter">&quot;</span><span class="content">exec2</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> ConnectionHolderImpl(emProvider2.connection()));
+
+        <span class="comment">//programmatic seed db1</span>
+        exec1.createDataSet(<span class="keyword">new</span> DataSetConfig(<span class="string"><span class="delimiter">&quot;</span><span class="content">users.yml</span><span class="delimiter">&quot;</span></span>));
+
+        exec2.createDataSet(<span class="keyword">new</span> DataSetConfig(<span class="string"><span class="delimiter">&quot;</span><span class="content">dataset-with-javascript.yml</span><span class="delimiter">&quot;</span></span>));<span class="comment">//seed db2</span>
+
+        <span class="comment">//user comes from database represented by pu1</span>
+        User user = (User) emProvider.em().
+                createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select u from User u where u.id = 1</span><span class="delimiter">&quot;</span></span>).getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(<span class="integer">1</span>);
+
+        <span class="comment">//tweets comes from pu2</span>
+        Tweet tweet = (Tweet) emProvider.em().createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select t from Tweet t where t.id = 1</span><span class="delimiter">&quot;</span></span>).getSingleResult();
+        assertThat(tweet).isNotNull();
+        assertThat(tweet.getLikes()).isEqualTo(<span class="integer">50</span>);
+    }
+
+}</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -1400,7 +1773,7 @@ connectionConfig:
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Source code of the above example can be <a href="https://github.com/database-rider/database-rider/blob/master/junit5/src/test/java/com/github/database/riderjunit5/DBUnitJUnit5It.java/#L22" target="_blank">found here</a>.
+Source code of the above example can be <a href="https://github.com/database-rider/database-rider/blob/master/rider-junit5/src/test/java/com/github/database/rider/junit5/DBUnitJUnit5It.java/#L24" target="_blank">found here</a>.
 </td>
 </tr>
 </table>
@@ -1545,8 +1918,56 @@ Source code of the above example can be <a href="https://github.com/database-rid
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/cdi/EntityManagerProducer.java<span class="type">[]</span></pre></td>
+  <td class="code"><pre><span class="keyword">package</span> <span class="namespace">com.github.database.rider.gettingstarted.cdi</span>;
+
+
+
+<span class="keyword">import</span> <span class="include">javax.enterprise.context.ApplicationScoped</span>;
+<span class="keyword">import</span> <span class="include">javax.enterprise.inject.Produces</span>;
+<span class="keyword">import</span> <span class="include">javax.persistence.EntityManager</span>;
+
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">com.github.database.rider.core.util.EntityManagerProvider.instance</span>;
+
+<span class="comment">/**
+ * Created by pestano on 09/10/15.
+ */</span>
+<span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">EntityManagerProducer</span> {
+
+    <span class="directive">private</span> EntityManager em;
+
+
+    <span class="annotation">@Produces</span>
+    <span class="directive">public</span> EntityManager produce() {
+        <span class="keyword">return</span> instance(<span class="string"><span class="delimiter">&quot;</span><span class="content">riderDB</span><span class="delimiter">&quot;</span></span>).em();
+    }
+
+}</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -1565,7 +1986,7 @@ Source code of the above example can be <a href="https://github.com/database-rid
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/cdi/DBUnitRulesCDITest.java[tags=sample]
+  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/gettingstarted/cdi/DBUnitRulesCDITest.java[tags=sample]
 }</pre></td>
 </tr></table></code></pre>
 </div>
@@ -1625,8 +2046,32 @@ For more examples, look at <a href="https://github.com/database-rider/database-r
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/cdi/DBUnitRulesCDITest.java[tags=expectedCDI]</pre></td>
+  <td class="code"><pre>    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(cleanBefore = <span class="predefined-constant">true</span>) <span class="comment">//needed to activate interceptor (can be at class level)</span>
+    <span class="annotation">@ExpectedDataSet</span>(value = <span class="string"><span class="delimiter">&quot;</span><span class="content">expectedUsers.yml</span><span class="delimiter">&quot;</span></span>,ignoreCols = <span class="string"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">void</span> shouldMatchExpectedDataSet() {
+        User u = <span class="keyword">new</span> User();
+        u.setName(<span class="string"><span class="delimiter">&quot;</span><span class="content">expected user1</span><span class="delimiter">&quot;</span></span>);
+        User u2 = <span class="keyword">new</span> User();
+        u2.setName(<span class="string"><span class="delimiter">&quot;</span><span class="content">expected user2</span><span class="delimiter">&quot;</span></span>);
+        em.getTransaction().begin();
+        em.persist(u);
+        em.persist(u2);
+        em.getTransaction().commit();
+    }</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -1729,8 +2174,32 @@ Examples:
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/bdd/DBUnitRulesBddTest.java<span class="type">[]</span></pre></td>
+  <td class="code"><pre><span class="keyword">package</span> <span class="namespace">com.github.database.rider.gettingstarted.bdd</span>;
+
+<span class="keyword">import</span> <span class="include">com.github.database.rider.cucumber.CdiCucumberTestRunner</span>;
+<span class="keyword">import</span> <span class="include">cucumber.api.CucumberOptions</span>;
+<span class="keyword">import</span> <span class="include">org.junit.runner.RunWith</span>;
+
+<span class="comment">/**
+ * Created by rmpestano on 4/17/16.
+ */</span>
+<span class="annotation">@RunWith</span>(CdiCucumberTestRunner.class)
+<span class="annotation">@CucumberOptions</span>(features =<span class="string"><span class="delimiter">&quot;</span><span class="content">src/test/resources/features/search-users.feature</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DBUnitRulesBddTest</span> {
+}</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -1741,8 +2210,112 @@ Examples:
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/sample/bdd/SearchUsersSteps.java<span class="type">[]</span></pre></td>
+  <td class="code"><pre><span class="keyword">package</span> <span class="namespace">com.github.database.rider.gettingstarted.bdd</span>;
+
+<span class="keyword">import</span> <span class="include">com.github.database.rider.cdi.api.DBUnitInterceptor</span>;
+<span class="keyword">import</span> <span class="include">com.github.database.rider.core.api.dataset.DataSet</span>;
+<span class="keyword">import</span> <span class="include">com.github.database.rider.gettingstarted.User</span>;
+<span class="keyword">import</span> <span class="include">cucumber.api.java.en.Given</span>;
+<span class="keyword">import</span> <span class="include">cucumber.api.java.en.Then</span>;
+<span class="keyword">import</span> <span class="include">cucumber.api.java.en.When</span>;
+<span class="keyword">import</span> <span class="include">org.hibernate.Session</span>;
+<span class="keyword">import</span> <span class="include">org.hibernate.criterion.MatchMode</span>;
+<span class="keyword">import</span> <span class="include">org.hibernate.criterion.Restrictions</span>;
+<span class="keyword">import</span> <span class="include">org.hibernate.sql.JoinType</span>;
+
+<span class="keyword">import</span> <span class="include">javax.inject.Inject</span>;
+<span class="keyword">import</span> <span class="include">javax.persistence.EntityManager</span>;
+<span class="keyword">import</span> <span class="include">java.util.List</span>;
+
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.assertThat</span>;
+
+<span class="comment">/**
+ * Created by pestano on 20/06/16.
+ */</span>
+<span class="annotation">@DBUnitInterceptor</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SearchUsersSteps</span> {
+
+    <span class="annotation">@Inject</span>
+    EntityManager entityManager;
+
+    <span class="predefined-type">List</span>&lt;User&gt; usersFound;
+
+    <span class="annotation">@Given</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">^We have two users that have tweets in our database$</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@DataSet</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">usersWithTweet.json</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">void</span> We_have_two_users_in_our_database() <span class="directive">throws</span> <span class="predefined-type">Throwable</span> {
+    }
+
+    <span class="annotation">@When</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">^I search them by tweet content </span><span class="char">\&quot;</span><span class="content">([^</span><span class="char">\&quot;</span><span class="content">]*)</span><span class="char">\&quot;</span><span class="content">$</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">void</span> I_search_them_by_tweet_content_value(<span class="predefined-type">String</span> tweetContent) <span class="directive">throws</span> <span class="predefined-type">Throwable</span> {
+        Session session = entityManager.unwrap(Session.class);
+        usersFound = session.createCriteria(User.class).
+        createAlias(<span class="string"><span class="delimiter">&quot;</span><span class="content">tweets</span><span class="delimiter">&quot;</span></span>,<span class="string"><span class="delimiter">&quot;</span><span class="content">tweets</span><span class="delimiter">&quot;</span></span>, JoinType.LEFT_OUTER_JOIN).
+        add(Restrictions.ilike(<span class="string"><span class="delimiter">&quot;</span><span class="content">tweets.content</span><span class="delimiter">&quot;</span></span>,tweetContent, MatchMode.ANYWHERE)).list();
+    }
+
+    <span class="annotation">@Then</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">^I should find (</span><span class="char">\\</span><span class="content">d+) users$</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">void</span> I_should_find_number_users(<span class="type">int</span> numberOfUsersFound) <span class="directive">throws</span> <span class="predefined-type">Throwable</span> {
+        assertThat(usersFound).
+                isNotNull().
+                hasSize(numberOfUsersFound).
+                contains(<span class="keyword">new</span> User(<span class="integer">1L</span>));<span class="comment">//examples contains user with id=1</span>
+    }
+
+
+}</pre></td>
 </tr></table></code></pre>
 </div>
 </div>
@@ -2107,7 +2680,7 @@ Full example above (and other related tests) can be <a href="https://github.com/
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-12-04 12:10:32 UTC
+Last updated 2016-12-04 12:26:04 UTC
 </div>
 </div>
 </body>
