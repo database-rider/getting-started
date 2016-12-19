@@ -908,7 +908,7 @@ There is a lot of <a href="https://github.com/database-rider/database-rider/tree
   <td class="code"><pre>    <span class="annotation">@Test</span>
     <span class="annotation">@DataSet</span>(value=<span class="string"><span class="delimiter">&quot;</span><span class="content">users.yml</span><span class="delimiter">&quot;</span></span>, disableConstraints=<span class="predefined-constant">true</span>)
     <span class="directive">public</span> <span class="type">void</span> shouldUpdateUser() {
-        User user = (User) em().
+        User user = (User) clear(<span class="string"><span class="delimiter">&quot;</span><span class="content">riderDB</span><span class="delimiter">&quot;</span></span>).em().
                 createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select u from User u  where u.id = 1</span><span class="delimiter">&quot;</span></span>).
                 getSingleResult();
         assertThat(user).isNotNull();
@@ -2680,7 +2680,7 @@ Full example above (and other related tests) can be <a href="https://github.com/
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-12-19 16:48:35 UTC
+Last updated 2016-12-19 17:02:28 UTC
 </div>
 </div>
 </body>
