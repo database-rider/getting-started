@@ -136,7 +136,8 @@ EntityManagerProvider rule provides entity manager transactions so you can inser
 ----
 include::{testdir}/DatabaseRiderCoreTest.java[tags=transaction]
 ----
-<1> `tx()` is a shortcut for the entity manager transaction provided by EntityManagerProvider.
+<1> clear("unitName") just clears JPA first level cache
+<2> `tx()` is a shortcut for the entity manager transaction provided by EntityManagerProvider.
 
 == Database assertion with ExpectedDataSet
 

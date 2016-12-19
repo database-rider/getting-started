@@ -53,12 +53,12 @@ public class DatabaseRiderCoreTest {
     @Test
     @DataSet(value="users.yml", disableConstraints=true)
     public void shouldUpdateUser() {
-        User user = (User) clear("riderDB").em().
-                createQuery("select u from User u  where u.id = 1").
+        User user = (User) clear("riderDB"). //<1>
+                em().createQuery("select u from User u  where u.id = 1").
                 getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getName()).isEqualTo("@realpestano");
-        tx().begin(); //<1>
+        tx().begin(); //<2>
         user.setName("@rmpestano");
         em().merge(user);
         tx().commit();
