@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static com.github.database.rider.core.util.EntityManagerProvider.clear;
 import static com.github.database.rider.core.util.EntityManagerProvider.em;
 import static com.github.database.rider.core.util.EntityManagerProvider.tx;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +53,7 @@ public class DatabaseRiderCoreTest {
     @Test
     @DataSet(value="users.yml", disableConstraints=true)
     public void shouldUpdateUser() {
-        User user = (User) em().
+        User user = (User) clear("riderDB").em().
                 createQuery("select u from User u  where u.id = 1").
                 getSingleResult();
         assertThat(user).isNotNull();
