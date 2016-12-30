@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.database-rider</groupId>
 	<artifactId>getting-started</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<properties>
 		<ds.version>1.6.1</ds.version>
@@ -58,7 +58,7 @@
 		<dependency>
 			<groupId>com.github.database-rider</groupId>
 			<artifactId>rider-core</artifactId>
-			<version>1.0.0-RC2</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- end::rider-core[] -->
@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>com.github.database-rider</groupId>
 			<artifactId>rider-cdi</artifactId>
-			<version>1.0.0-RC2</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- end::rider-cdi[] -->
@@ -87,7 +87,7 @@
 		<dependency>
 			<groupId>com.github.database-rider</groupId>
 			<artifactId>rider-cucumber</artifactId>
-			<version>1.0.0-RC2</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- end::rider-cucumber[] -->
