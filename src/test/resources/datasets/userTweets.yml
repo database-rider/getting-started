@@ -1,29 +1,29 @@
-user:
-  - id: 1
-    name: "@dbunit"
-  - id: 2
-    name: "@dbunit2"
-  - id: 3
-    name: "@dbunit3"
+USER:
+  - ID: 1
+    NAME: "@dbunit"
+  - ID: 2
+    NAME: "@dbunit2"
+  - ID: 3
+    NAME: "@dbunit3"
 
-tweet:
-  - id: 1
-    content: "tweet from dbunit rules!"
-    date: "[DAY,NOW]"
-    user_id: 1
-  - id: 2
-    content: "test tweet"
-    date: "[DAY,NOW]"
-    user_id: 1
-  - id: 3
-    content: "tweet from dbunit rules2!"
-    date: "[DAY,NOW]"
-    user_id: 2
-  - id: 4
-    content: "test tweet2"
-    date: "[DAY,NOW]"
-    user_id: 2
-  - id: 5
-    content: "tweet from dbunit rules3!"
-    date: "[DAY,NOW]"
-    user_id: 3
+TWEET:
+  - ID: 1
+    CONTENT: "tweet from dbunit rules!"
+    DATE: "[DAY,NOW]"
+    USER_ID: 1
+  - ID: 2
+    CONTENT: "test tweet"
+    DATE: "[DAY,NOW]"
+    USER_ID: 1
+  - ID: 3
+    CONTENT: "tweet from dbunit rules2!"
+    DATE: "[DAY,NOW]"
+    USER_ID: 2
+  - ID: 4
+    CONTENT: "test tweet2"
+    DATE: "[DAY,NOW]"
+    USER_ID: 2
+  - ID: 5
+    CONTENT: "tweet from dbunit rules3!"
+    DATE: "[DAY,NOW]"
+    USER_ID: 3

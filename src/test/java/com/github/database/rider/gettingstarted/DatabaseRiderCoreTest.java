@@ -37,7 +37,7 @@ public class DatabaseRiderCoreTest {
 //tag::sample[]
 
     @Test
-    @DataSet("users.yml") //<3>
+    @DataSet({"users.yml","empty-tweets.yml"}) //<3>
     public void shouldListUsers() {
         List<User> users = em(). //<4>
                 createQuery("select u from User u").
