@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.database-rider</groupId>
     <artifactId>getting-started</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <properties>
-        <ds.version>1.6.1</ds.version>
+        <ds.version>1.8.0</ds.version>
     </properties>
 
     <dependencies>
@@ -97,6 +97,13 @@
         <dependency> <!--1 -->
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
+            <version>${ds.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
             <version>${ds.version}</version>
             <scope>test</scope>
         </dependency>
