@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.database-rider</groupId>
     <artifactId>getting-started</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.5</version>
 
     <properties>
         <ds.version>1.8.0</ds.version>

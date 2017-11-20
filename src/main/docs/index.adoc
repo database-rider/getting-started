@@ -370,7 +370,7 @@ Just add following dependency to your classpath:
 <dependency>
    <groupId>com.github.database-rider</groupId>
    <artifactId>rider-junit5</artifactId>
-   <version>1.0.0-RC2</version>
+   <version>1.2.5</version>
    <scope>test</scope>
 </dependency>
 ----
@@ -444,6 +444,8 @@ include::{metainf}/apache-deltaspike.properties[]
 
 The test itself must be a CDI bean so Database Rider can intercept it.
 
+IMPORTANT: When using above configuration the JUnit `@Before` will not work as expected, see https://lists.apache.org/thread.html/60ae2ade9ff8c5588a53a138b64c94e505455185358c21f663a5fd33@%3Cusers.deltaspike.apache.org%3E[discussion here^].
+
 The last configuration needed is to produce a EntityManager for tests:
 
 [source,java,linenums]
@@ -459,7 +461,7 @@ Here is a test example:
 
 [source,java,linenums]
 ----
-include::{testdir}/cdi/DBUnitRulesCDITest.java[tags=sample]
+include::{testdir}/cdi/DatabaseRiderCDITest.java[tags=sample]
 }
 ----
 <1> DeltaSpike JUnit runner that enables CDI in tests;
