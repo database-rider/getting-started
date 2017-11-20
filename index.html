@@ -1709,7 +1709,7 @@ connectionConfig:
 <pre>&lt;dependency&gt;
    &lt;groupId&gt;com.github.database-rider&lt;/groupId&gt;
    &lt;artifactId&gt;rider-junit5&lt;/artifactId&gt;
-   &lt;version&gt;1.0.0-RC2&lt;/version&gt;
+   &lt;version&gt;1.2.5&lt;/version&gt;
    &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
 </div>
@@ -1922,6 +1922,18 @@ Source code of the above example can be <a href="https://github.com/database-rid
 <div class="paragraph">
 <p>The test itself must be a CDI bean so Database Rider can intercept it.</p>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+When using above configuration the JUnit <code>@Before</code> will not work as expected, see <a href="https://lists.apache.org/thread.html/60ae2ade9ff8c5588a53a138b64c94e505455185358c21f663a5fd33@%3Cusers.deltaspike.apache.org%3E" target="_blank">discussion here</a>.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>The last configuration needed is to produce a EntityManager for tests:</p>
 </div>
@@ -1996,8 +2008,46 @@ Source code of the above example can be <a href="https://github.com/database-rid
 <pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
 </pre></td>
-  <td class="code"><pre>Unresolved directive in index.adoc - include::/home/travis/build/database-rider/getting-started/src/test/java/com/github/database/rider/gettingstarted/cdi/DBUnitRulesCDITest.java[tags=sample]
+  <td class="code"><pre><span class="annotation">@RunWith</span>(CdiTestRunner.class) <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="annotation">@DBUnitInterceptor</span> <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DatabaseRiderCDITest</span> {
+
+    <span class="annotation">@Inject</span>
+    EntityManager em; <i class="conum" data-value="3"></i><b>(3)</b>
+
+
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@DataSet</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">users.yml</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="directive">public</span> <span class="type">void</span> shouldListUsers() {
+        <span class="predefined-type">List</span>&lt;User&gt; users = em.
+                createQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">select u from User u</span><span class="delimiter">&quot;</span></span>).
+                getResultList();
+        assertThat(users).
+                isNotNull().
+                isNotEmpty().
+                hasSize(<span class="integer">2</span>);
+    }
 }</pre></td>
 </tr></table></code></pre>
 </div>
@@ -2691,7 +2741,7 @@ Full example above (and other related tests) can be <a href="https://github.com/
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-08-31 23:06:46 UTC
+Last updated 2017-11-20 12:28:05 UTC
 </div>
 </div>
 </body>
