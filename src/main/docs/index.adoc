@@ -126,7 +126,7 @@ include::{testdir}/DatabaseRiderCoreTest.java[tags=declaration;sample]
 <3> The dataSet configuration itself, https://github.com/database-rider/database-rider/blob/master/core/src/main/java/com/github/database/riderapi/dataset/DataSet.java#L14[see here^] for all available configuration options. Note that you can provide a comma separated list of datasets names here. 
 <4> *em()* is a shortcut (`import static com.github.database.rider.core.util.EntityManagerProvider.em;`) for the EntityManager that was initialized by EntityManagerProvider rule. 
  
-TIP: There is a lot of https://github.com/database-rider/database-rider/tree/master/core/src/test/java/com/github/database/rider[example tests here^]. 
+TIP: There is a lot of https://github.com/database-rider/database-rider/tree/master/rider-core/src/test/java/com/github/database/rider/core[example tests here^]. 
 
 == Transactions 
 
