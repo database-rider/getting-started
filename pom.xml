@@ -273,7 +273,7 @@
                             <checkinComment>Publishing Database Rider getting started guide.</checkinComment>
                             <content>target/docs</content>
                             <skipDeletedFiles>true</skipDeletedFiles>
-                            <pubScmUrl>scm:git:https://${USER}:${PASS}@github.com/database-rider/getting-started.git
+                            <pubScmUrl>scm:git:https://${GH_TOKEN}@github.com/database-rider/getting-started.git
                             </pubScmUrl>
                             <scmBranch>gh-pages</scmBranch>
                         </configuration>
