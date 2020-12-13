@@ -35,7 +35,7 @@ First thing to do is to add Database Rider core module to your test classpath:
 
 
 ----
-include::{basedir}/pom.xml[tags=rider-core]
+include::{basedir}/pom.xml[tags=rider-core, subs="attributes"]
 ----
 
 Secondly we need a database, for testing I recommend http://hsqldb.org/[HSQLDB^] which is a very fast in-memory database, here is its maven dependency:
@@ -357,6 +357,8 @@ include::{testdir}/MultipleDataBasesTest.java[]
 <2> here we match dataset executor id in @DataSet annotation so in this test we are going to use database from `pu1`.
 <3> For multiple databases in same test we need to initialize database state `programmatically` instead of using annotations.
 
+TIP: Prefer https://github.com/database-rider/database-rider#riderdsl[RiderDSL^] to initiallize datassets programmatically.
+
 == Riding database in *JUnit 5* tests
 
 http://junit.org/junit5/[JUnit 5^] is the new version of JUnit and comes with a new extension model, so instead of `rules` you will use `extensions` in your tests. Database Rider comes with a JUnit 5 extension which enables DBUnit.
@@ -370,7 +372,7 @@ Just add following dependency to your classpath:
 <dependency>
    <groupId>com.github.database-rider</groupId>
    <artifactId>rider-junit5</artifactId>
-   <version>1.2.5</version>
+   <version>1.19.0</version>
    <scope>test</scope>
 </dependency>
 ----
